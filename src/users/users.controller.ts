@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -14,8 +13,9 @@ import { CreateUserDto } from './dtos/create.user.dto';
 import { UsersService } from './users.service';
 import { FindUsersDto } from './dtos/find.users.dto';
 import { UpdateUserDto } from './dtos/update.user.dto';
+import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 
-@UseInterceptors(ClassSerializerInterceptor)
+@UseInterceptors(SerializeInterceptor)
 @Controller('auth')
 export class UsersController {
   constructor(private userService: UsersService) {}
