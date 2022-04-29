@@ -15,6 +15,7 @@ import { UsersService } from './users.service';
 import { FindUsersDto } from './dtos/find.users.dto';
 import { UpdateUserDto } from './dtos/update.user.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class UsersController {
   constructor(private userService: UsersService) {}
@@ -29,7 +30,6 @@ export class UsersController {
     return this.userService.create(dto);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   findUser(@Param('id') id: string) {
     return this.userService.findOne(parseInt(id));
