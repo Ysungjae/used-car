@@ -8,27 +8,28 @@ import { CreateUserDto } from './dtos/create.user.dto';
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto) {
     const { email, password } = dto;
     const user = this.repo.create({ email, password }); // for hooks
 
     return this.repo.save(user);
   }
 
-  findOne(id: number) {
-    return this.repo.findOneBy({ id });
+  async findOne(id: number) {
+    const user = await this.repo.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
+
+    return user;
   }
 
-  find(email: string) {
+  async find(email: string) {
     return this.repo.findBy({ email });
   }
 
   async update(id: number, attrs: Partial<User>) {
     const user = await this.findOne(id);
-
-    if (!user) {
-      throw new NotFoundException('User not found!');
-    }
 
     Object.assign(user, attrs);
 
@@ -37,10 +38,6 @@ export class UsersService {
 
   async remove(id: number) {
     const user = await this.findOne(id);
-
-    if (!user) {
-      throw new NotFoundException('User not found!');
-    }
 
     return this.repo.remove(user);
   }
